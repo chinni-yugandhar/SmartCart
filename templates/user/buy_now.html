@@ -1,0 +1,129 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\buy_now.html -->
+{% extends "base.html" %}
+
+{% block title %}Checkout - Buy Now - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Left Column: Address Input Form -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-md p-4 p-md-5 rounded-4 bg-white">
+                <h3 class="fw-bold mb-4" style="color: var(--primary-dark);">Enter Delivery Address</h3>
+                
+                <form method="POST" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <!-- Full Name -->
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="John Doe" required>
+                                <label for="full_name"><i class="bi bi-person me-2"></i>Full Name</label>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                <label for="mobile"><i class="bi bi-phone me-2"></i>Mobile Number</label>
+                                <div class="invalid-feedback">Please enter your mobile number.</div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                                <label for="email"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" id="address" name="address" placeholder="Address" required style="height: 90px;"></textarea>
+                                <label for="address"><i class="bi bi-geo-alt me-2"></i>Street Address, Apartment, Suite</label>
+                                <div class="invalid-feedback">Please enter your shipping address.</div>
+                            </div>
+                        </div>
+
+                        <!-- City -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                                <label for="city"><i class="bi bi-building me-2"></i>City</label>
+                                <div class="invalid-feedback">Please enter your city.</div>
+                            </div>
+                        </div>
+
+                        <!-- State -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                                <label for="state"><i class="bi bi-map me-2"></i>State</label>
+                                <div class="invalid-feedback">Please enter your state.</div>
+                            </div>
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" required>
+                                <label for="pincode"><i class="bi bi-hash me-2"></i>Pincode</label>
+                                <div class="invalid-feedback">Please enter your pincode.</div>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
+                                <label for="quantity"><i class="bi bi-plus-slash-minus me-2"></i>Quantity</label>
+                                <div class="invalid-feedback">Please enter a valid quantity of 1 or more.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-premium-accent py-3 w-100 mt-4 text-uppercase fw-bold">
+                        Proceed to Pay <i class="bi bi-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Product Info Summary Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-md p-4 rounded-4 bg-white sticky-top text-center" style="top: 100px; z-index: 10;">
+                <h4 class="fw-bold mb-4 pb-2 border-bottom text-start">Order Summary</h4>
+                <div class="bg-light p-3 rounded-3 text-center mx-auto mb-3" style="width: 140px; height: 140px;">
+                    <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                </div>
+                <h5 class="fw-bold text-dark mb-1">{{ product.name }}</h5>
+                <p class="text-muted mb-3" style="font-size: 0.85rem; line-height: 1.4;">{{ product.description }}</p>
+                <div class="fs-4 fw-bold text-success">₹{{ product.price }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Bootstrap form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

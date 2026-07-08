@@ -1,0 +1,114 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\admin\item_list.html -->
+{% extends "base.html" %}
+
+{% block title %}Manage Inventory - Admin - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="row align-items-center mb-5 g-3">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-0">📦 Store Inventory</h2>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">Manage products list, analyze categories, edit pricing, and update stock assets.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <a href="/admin/add-item" class="btn btn-premium-accent py-2.5">
+                <i class="bi bi-plus-circle"></i> Add New Product
+            </a>
+            <a href="/admin-dashboard" class="btn btn-premium-outline py-2.5 ms-2">
+                Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Integrated Search & Filter Row -->
+    <div class="card border-0 shadow-sm p-4 rounded-4 bg-white mb-4">
+        <form method="GET" action="/admin/item-list" class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="form-floating">
+                    <input type="text" name="search" class="form-control border-1" id="searchInput" placeholder="Search product..." value="{{ request.args.get('search', '') }}">
+                    <label for="searchInput"><i class="bi bi-search me-1"></i> Search by name...</label>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="form-floating">
+                    <select name="category" class="form-select border-1" id="categorySelect">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.category }}" {% if request.args.get('category') == cat.category %}selected{% endif %}>
+                            {{ cat.category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <label for="categorySelect"><i class="bi bi-tag me-1"></i> Filter Category</label>
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-premium-primary w-100 py-3 shadow-sm"><i class="bi bi-funnel"></i> Search & Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Inventory Table Card -->
+    {% if products %}
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white mb-5">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="font-size: 0.95rem;">
+                    <thead class="table-light border-0">
+                        <tr>
+                            <th class="ps-4" style="width: 80px;">ID</th>
+                            <th style="width: 100px;">Image</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th class="text-end pe-4" style="width: 320px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr class="border-bottom">
+                                <td class="ps-4 fw-semibold text-muted">#{{ product.product_id }}</td>
+                                <td>
+                                    <div class="bg-light p-1.5 rounded-3 border d-inline-block" style="width: 60px; height: 60px;">
+                                        <img src="/static/uploads/product_images/{{ product.image }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                </td>
+                                <td class="fw-bold text-dark">{{ product.name }}</td>
+                                <td>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-1.5 rounded-pill fw-bold text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">{{ product.category }}</span>
+                                </td>
+                                <td class="fw-bold text-dark">₹{{ product.price }}</td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-2">
+                                        <a href="/admin/view-item/{{ product.product_id }}" class="btn btn-sm btn-premium-outline py-2 px-3">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        <a href="/admin/update-item/{{ product.product_id }}" class="btn btn-sm btn-premium-primary py-2 px-3">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="/admin/delete-item/{{ product.product_id }}" class="btn btn-sm btn-outline-danger py-2 px-3" onclick="return confirm('Are you sure you want to permanently delete this product? All related order links will remain unchanged.')">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty list state -->
+        <div class="text-center py-5 bg-white border rounded-4 shadow-sm">
+            <div class="rounded-circle bg-secondary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-box text-muted" style="font-size: 2.2rem;"></i>
+            </div>
+            <h4 class="fw-bold">No Products Found</h4>
+            <p class="text-muted">No items exist in the inventory catalog. Add products first or adjust filters.</p>
+            <a href="/admin/add-item" class="btn btn-premium-accent py-2 px-4 mt-2">Add New Product</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

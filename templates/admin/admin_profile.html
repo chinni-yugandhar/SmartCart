@@ -1,0 +1,132 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\admin\admin_profile.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Profile - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row g-4 justify-content-center">
+        <!-- Left Side: Profile Summary Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg p-4 rounded-4 bg-white text-center h-100">
+                <h5 class="fw-bold mb-4 border-bottom pb-2 text-start">Profile Summary</h5>
+                
+                <!-- Avatar image selection -->
+                <div class="mb-4 position-relative">
+                    {% if admin.profile_image %}
+                        <img src="/static/uploads/admin_profiles/{{ admin.profile_image }}" alt="Admin Profile Image" class="rounded-circle border border-4 border-warning shadow-md" style="width: 140px; height: 140px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-warning border border-4 border-white shadow-md d-inline-flex align-items-center justify-content-center text-dark fw-bold fs-1 mx-auto" style="width: 140px; height: 140px;">
+                            {{ admin.name[0] | upper if admin.name else 'A' }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <h4 class="fw-bold mb-1">{{ admin.name }}</h4>
+                <span class="badge bg-warning text-dark px-3 py-1.5 rounded-pill fw-bold text-uppercase mb-3" style="font-size: 0.7rem; letter-spacing: 0.5px;">Store Admin</span>
+                
+                <div class="text-muted d-flex align-items-center justify-content-center gap-2 mb-4" style="font-size: 0.9rem;">
+                    <i class="bi bi-envelope"></i> {{ admin.email }}
+                </div>
+                
+                <hr class="my-4">
+                
+                <a href="/admin-dashboard" class="btn btn-premium-outline w-100 py-2.5">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Side: Edit Form Card -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg p-4 p-md-5 rounded-4 bg-white h-100">
+                <h3 class="fw-bold mb-4" style="color: var(--primary-dark);"><i class="bi bi-gear-fill text-warning me-2"></i>Admin Settings</h3>
+                <p class="text-muted mb-4">Edit administrative details, configure dashboard security, and modify profile image credentials.</p>
+                
+                <form method="POST" action="/admin/profile" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <!-- Name Field -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" value="{{ admin.name }}" required>
+                                <label for="name"><i class="bi bi-person me-2"></i>Full Name</label>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" value="{{ admin.email }}" required>
+                                <label for="email"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3 position-relative">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="New Password" style="padding-right: 45px;">
+                                <label for="password"><i class="bi bi-lock me-2"></i>New Password (Optional)</label>
+                                <button type="button" class="btn position-absolute end-0 top-50 translate-middle-y border-0 text-muted" id="togglePassword" style="z-index: 10;">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <small class="text-muted d-block mt-1">Leave empty to keep your current password.</small>
+                            </div>
+                        </div>
+
+                        <!-- Profile Image Field -->
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="profile_image" class="form-label fw-semibold text-dark"><i class="bi bi-image me-1"></i> Upload Profile Image</label>
+                                <input class="form-control" type="file" id="profile_image" name="profile_image" accept="image/*">
+                                <small class="text-muted d-block mt-1">Upload a square image (JPEG/PNG) to update your admin avatar.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 border-top pt-4 text-end">
+                        <button type="submit" class="btn btn-premium-accent py-3 px-5">
+                            Update Settings <i class="bi bi-check-circle"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Password visibility toggle logic
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    });
+
+    // Bootstrap form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

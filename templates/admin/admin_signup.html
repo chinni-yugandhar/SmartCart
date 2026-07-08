@@ -1,0 +1,66 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\admin\admin_signup.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Registration - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+            <div class="card glass-card border-0 shadow-lg p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                        <i class="bi bi-shield-plus text-warning" style="font-size: 1.8rem;"></i>
+                    </div>
+                    <h3 class="fw-bold">Admin Registration</h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Register an administrator account. An OTP will be sent to verify your email.</p>
+                </div>
+                
+                <form method="POST" action="/admin-signup" class="needs-validation" novalidate>
+                    <!-- Name Field -->
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="nameInput" name="name" placeholder="John Doe" required>
+                        <label for="nameInput"><i class="bi bi-person me-2"></i>Full Name</label>
+                        <div class="invalid-feedback">Please enter your full name.</div>
+                    </div>
+                    
+                    <!-- Email Field -->
+                    <div class="form-floating mb-4">
+                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="name@example.com" required>
+                        <label for="emailInput"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                        <div class="invalid-feedback">Please enter a valid administrator email.</div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-premium-primary w-100 py-3 mb-3">Send OTP</button>
+                </form>
+                
+                <div class="text-center mt-3 border-top pt-3">
+                    <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+                        Already registered? <a href="/admin-login" class="text-warning fw-bold">Sign In here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Bootstrap form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

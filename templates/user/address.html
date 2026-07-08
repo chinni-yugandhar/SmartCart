@@ -1,0 +1,185 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\address.html -->
+{% extends "base.html" %}
+
+{% block title %}Checkout - Shipping Address - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Step Progress Indicator -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between position-relative align-items-center">
+                <!-- Progress Line -->
+                <div class="position-absolute top-50 start-0 translate-middle-y w-100 bg-secondary bg-opacity-25" style="height: 3px; z-index: 1;"></div>
+                <div class="position-absolute top-50 start-0 translate-middle-y bg-warning" style="height: 3px; width: 33%; z-index: 2; transition: var(--transition-smooth);"></div>
+                
+                <!-- Steps -->
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-cart-check-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Cart</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <span class="fw-bold mt-2" style="font-size: 0.85rem; color: var(--primary-dark);">Address</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <span class="fw-semibold text-muted mt-2" style="font-size: 0.85rem;">Payment</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <span class="fw-semibold text-muted mt-2" style="font-size: 0.85rem;">Confirm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+        <!-- Left Column: Address Input Form -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-md p-4 p-md-5 rounded-4 bg-white">
+                <h3 class="fw-bold mb-4" style="color: var(--primary-dark);">Delivery Address</h3>
+                
+                <form method="POST" action="{{ url_for('address') }}" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <!-- Full Name -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="John Doe" required>
+                                <label for="full_name"><i class="bi bi-person me-2"></i>Full Name</label>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                <label for="mobile"><i class="bi bi-phone me-2"></i>Mobile Number</label>
+                                <div class="invalid-feedback">Please enter your mobile number.</div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                                <label for="email"><i class="bi bi-envelope me-2"></i>Email Address</label>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                        </div>
+
+                        <!-- Full Address -->
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="address" name="address" placeholder="Address" required style="height: 100px;"></textarea>
+                                <label for="address"><i class="bi bi-geo-alt me-2"></i>Street Address, Apartment, Suite</label>
+                                <div class="invalid-feedback">Please enter your shipping address details.</div>
+                            </div>
+                        </div>
+
+                        <!-- City -->
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                                <label for="city"><i class="bi bi-building me-2"></i>City</label>
+                                <div class="invalid-feedback">Please enter your city.</div>
+                            </div>
+                        </div>
+
+                        <!-- State -->
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                                <label for="state"><i class="bi bi-map me-2"></i>State</label>
+                                <div class="invalid-feedback">Please enter your state.</div>
+                            </div>
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" required>
+                                <label for="pincode"><i class="bi bi-hash me-2"></i>Pincode</label>
+                                <div class="invalid-feedback">Please enter your pincode.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4 pt-2">
+                        <a href="{{ url_for('view_cart') }}" class="btn btn-premium-outline px-4 py-3 align-self-stretch text-center w-50">
+                            <i class="bi bi-arrow-left"></i> Back to Cart
+                        </a>
+                        <button type="submit" class="btn btn-premium-accent py-3 w-50">
+                            Proceed to Payment <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Sticky Selected Items Summary Card -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-md p-4 rounded-4 bg-white sticky-top" style="top: 100px; z-index: 10;">
+                <h4 class="fw-bold mb-4 pb-2 border-bottom">Selected Items</h4>
+                
+                {% if checkout %}
+                    <div class="d-flex flex-column gap-3 mb-4 max-height-list" style="max-height: 280px; overflow-y: auto;">
+                        {% for item in checkout['items'] %}
+                            <div class="d-flex gap-3 pb-2 border-bottom">
+                                <div class="bg-light p-1.5 rounded-2 text-center" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <img src="{{ url_for('static', filename='uploads/product_images/' + item.image) }}" alt="{{ item.name }}" style="max-width:100%; max-height:100%; object-fit: contain;">
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h6 class="fw-bold mb-0 text-truncate" style="font-size: 0.85rem;">{{ item.name }}</h6>
+                                    <small class="text-muted">Qty: {{ item.quantity }}</small>
+                                </div>
+                                <div class="fw-bold text-dark" style="font-size: 0.85rem;">₹{{ item.total }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Shipping</span>
+                        <span class="text-success fw-semibold">FREE</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <span class="fw-bold fs-5">Total Amount</span>
+                        <span class="fs-4 fw-bold text-success">₹{{ checkout['total_amount'] }}</span>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No items selected.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Bootstrap form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

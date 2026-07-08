@@ -1,0 +1,177 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\cart.html -->
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="fw-bold mb-4">Your Shopping Cart</h2>
+
+    {% if not cart %}
+        <!-- Empty Cart State -->
+        <div class="card border-0 shadow-lg p-5 text-center bg-white rounded-4">
+            <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                <i class="bi bi-cart-x text-warning" style="font-size: 2.5rem;"></i>
+            </div>
+            <h4 class="fw-bold">Your Cart is Empty</h4>
+            <p class="text-muted">It looks like you haven't added any luxury items to your cart yet. Explore our latest items!</p>
+            <a href="{{ url_for('user_products') }}" class="btn btn-premium-primary px-4 py-3 mt-2">
+                <i class="bi bi-bag"></i> Continue Shopping
+            </a>
+        </div>
+    {% else %}
+        <form action="{{ url_for('cart_proceed_buy') }}" method="POST" id="cartForm">
+            <div class="row g-4">
+                <!-- Left Column: Cart Items List -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-md p-3 p-md-4 rounded-4 bg-white mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                            <span class="fw-bold text-muted" style="font-size: 0.85rem;">Items</span>
+                            <!-- Select All toggle -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAllCheckbox">
+                                <label class="form-check-label text-muted fw-semibold" for="selectAllCheckbox" style="font-size: 0.85rem;">Select All</label>
+                            </div>
+                        </div>
+
+                        {% for pid, item in cart.items() %}
+                            <div class="row align-items-center g-3 py-3 {% if not loop.last %}border-bottom{% endif %}">
+                                <!-- Checkbox Column -->
+                                <div class="col-auto">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="selected_items" value="{{ pid }}" class="form-check-input item-checkbox" data-total="{{ item.price * item.quantity }}" style="width: 1.2rem; height: 1.2rem; cursor: pointer;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Image Column -->
+                                <div class="col-3 col-md-2 text-center">
+                                    <div class="bg-light p-2 rounded-3 border d-inline-block">
+                                        <img src="{{ url_for('static', filename='uploads/product_images/' + item.image) }}" alt="{{ item.name }}" class="img-fluid" style="max-height: 70px; object-fit: contain;">
+                                    </div>
+                                </div>
+                                
+                                <!-- Details Column -->
+                                <div class="col-7 col-md-5">
+                                    <h6 class="fw-bold mb-1" style="font-size: 0.95rem;">{{ item.name }}</h6>
+                                    <span class="badge bg-warning bg-opacity-10 text-warning px-2.5 py-1 text-uppercase fw-semibold mb-1" style="font-size: 0.65rem;">Premium</span>
+                                    <div class="text-muted d-md-none" style="font-size: 0.85rem; font-weight: 600;">₹{{ item.price }}</div>
+                                </div>
+                                
+                                <!-- Quantity & Price (Desktop) -->
+                                <div class="col-md-3 d-none d-md-block text-center">
+                                    <div class="fw-semibold text-muted mb-1" style="font-size: 0.85rem;">Price: ₹{{ item.price }}</div>
+                                    <div class="fw-bold text-dark" style="font-size: 0.95rem;">Qty: {{ item.quantity }}</div>
+                                </div>
+                                
+                                <!-- Quantity Adjustments and Delete (Responsive layout) -->
+                                <div class="col-12 col-md-2 text-end">
+                                    <div class="d-flex justify-content-end align-items-center gap-1.5 gap-md-1">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary px-2.5 py-1" formaction="{{ url_for('decrease_quantity', pid=pid) }}" formmethod="POST">-</button>
+                                        <span class="px-2.5 fw-bold d-md-none" style="font-size: 0.9rem;">{{ item.quantity }}</span>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary px-2.5 py-1" formaction="{{ url_for('increase_quantity', pid=pid) }}" formmethod="POST">+</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger px-2.5 py-1 ms-2" formaction="{{ url_for('remove_from_cart', pid=pid) }}" formmethod="POST">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="fw-bold text-dark mt-2 d-md-none" style="font-size: 0.95rem;">Total: ₹{{ item.price * item.quantity }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Right Column: Sticky Summary Card -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-md p-4 rounded-4 bg-white sticky-top" style="top: 100px; z-index: 10;">
+                        <h4 class="fw-bold mb-4 pb-2 border-bottom">Order Summary</h4>
+                        
+                        <!-- Details and totals -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Total Cart Value</span>
+                            <span class="fw-semibold text-dark">₹{{ grand_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success fw-semibold">FREE</span>
+                        </div>
+
+                        <!-- Grand dynamic totals -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5">Selected Items Total</span>
+                                <span class="fs-4 fw-bold text-success">₹<span id="selected-total">0.00</span></span>
+                            </div>
+                            <small class="text-muted d-block mt-1">Please select items to proceed with the payment checkout.</small>
+                        </div>
+                        
+                        <!-- Primary Actions -->
+                        <div class="d-flex flex-column gap-2">
+                            <button type="submit" class="btn btn-premium-accent w-100 py-3 text-uppercase fw-bold" id="checkoutBtn" disabled>
+                                <i class="bi bi-shield-lock me-1"></i> Proceed to Buy
+                            </button>
+                            <a href="{{ url_for('user_products') }}" class="btn btn-premium-outline w-100 py-2.5 text-uppercase fw-semibold" style="font-size: 0.85rem;">
+                                <i class="bi bi-cart"></i> Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+        const selectedTotalSpan = document.getElementById('selected-total');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+
+        function updateSelectedTotal() {
+            let total = 0;
+            let checkedCount = 0;
+            
+            itemCheckboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    total += parseFloat(checkbox.dataset.total || 0);
+                    checkedCount++;
+                }
+            });
+            
+            selectedTotalSpan.textContent = total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            
+            // Enable button only if items are selected
+            if (checkedCount > 0) {
+                checkoutBtn.removeAttribute('disabled');
+            } else {
+                checkoutBtn.setAttribute('disabled', 'true');
+            }
+
+            // Sync the Select All state
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = checkedCount === itemCheckboxes.length;
+            }
+        }
+
+        // Initialize total
+        updateSelectedTotal();
+
+        // Checkbox events
+        itemCheckboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', updateSelectedTotal);
+        });
+
+        // Select All trigger logic
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function() {
+                itemCheckboxes.forEach((checkbox) => {
+                    checkbox.checked = this.checked;
+                });
+                updateSelectedTotal();
+            });
+        }
+    });
+</script>
+{% endblock %}

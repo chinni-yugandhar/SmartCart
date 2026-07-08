@@ -1,0 +1,128 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\oder_success.html -->
+{% extends "base.html" %}
+
+{% block title %}Order Confirmed - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Step Progress Indicator (Complete State) -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between position-relative align-items-center">
+                <div class="position-absolute top-50 start-0 translate-middle-y w-100 bg-warning" style="height: 3px; z-index: 1;"></div>
+                
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-cart-check-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Cart</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Address</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-credit-card-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Payment</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <span class="fw-bold mt-2" style="font-size: 0.85rem; color: var(--primary-dark);">Confirm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Details Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <!-- Animated Checkmark Icon -->
+                    <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4 text-success" style="width: 80px; height: 80px;">
+                        <i class="bi bi-check2-circle" style="font-size: 3.5rem;"></i>
+                    </div>
+                    <h2 class="fw-bold text-success mb-2">🎉 Your Order is Confirmed!</h2>
+                    <p class="text-muted">Thank you for shopping with <strong>SmartCart</strong>. Your delivery is being scheduled.</p>
+                </div>
+                
+                <!-- Order Core Details -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded-3 h-100 border">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2" style="font-size: 1.05rem;"><i class="bi bi-info-circle me-1"></i> Transaction Info</h5>
+                            <ul class="list-unstyled mb-0 d-flex flex-column gap-2" style="font-size: 0.9rem;">
+                                <li><strong class="text-dark">Order ID:</strong> <span class="text-muted">{{ order.order_id }}</span></li>
+                                <li><strong class="text-dark">Payment ID:</strong> <span class="text-muted">{{ order.razorpay_payment_id }}</span></li>
+                                <li><strong class="text-dark">Amount Paid:</strong> <span class="text-success fw-bold">₹{{ order.amount }}</span></li>
+                                <li><strong class="text-dark">Order Date:</strong> <span class="text-muted">{{ order.created_at }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="p-4 bg-light rounded-3 h-100 border">
+                            <h5 class="fw-bold mb-3 border-bottom pb-2" style="font-size: 1.05rem;"><i class="bi bi-geo-alt me-1"></i> Delivery Address</h5>
+                            {% if order_address %}
+                                <address class="mb-0 text-muted" style="font-style: normal; font-size: 0.9rem; line-height: 1.6;">
+                                    <strong class="text-dark d-block">{{ order_address.full_name }}</strong>
+                                    {{ order_address.address }}<br>
+                                    {{ order_address.city }}, {{ order_address.state }} - {{ order_address.pincode }}<br>
+                                    <span class="d-block mt-2"><i class="bi bi-phone"></i> {{ order_address.mobile }}</span>
+                                    <span><i class="bi bi-envelope"></i> {{ order_address.email }}</span>
+                                </address>
+                            {% else %}
+                                <p class="text-muted mb-0">Delivery address details stored in security database.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Item Table -->
+                <div class="mb-5">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-bag-check me-1"></i> Order Items</h5>
+                    <div class="table-responsive rounded-3 border">
+                        <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Product Name</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-end pe-4">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for it in items %}
+                                    <tr>
+                                        <td class="ps-4 fw-semibold text-dark">{{ it.product_name }}</td>
+                                        <td class="text-center">{{ it.quantity }}</td>
+                                        <td class="text-end pe-4 fw-bold">₹{{ it.price }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Confirmation Action Buttons -->
+                <div class="d-flex flex-column flex-md-row gap-3 pt-3 border-top justify-content-center">
+                    <a href="{{ url_for('user_products') }}" class="btn btn-premium-outline px-4 py-3 text-center">
+                        <i class="bi bi-cart"></i> Continue Shopping
+                    </a>
+                    <a href="{{ url_for('user_my_orders') }}" class="btn btn-premium-primary px-4 py-3 text-center">
+                        <i class="bi bi-receipt"></i> View My Orders
+                    </a>
+                    <a href="/user/download-invoice/{{ order.order_id }}" class="btn btn-premium-accent px-4 py-3 text-center">
+                        <i class="bi bi-file-pdf"></i> Download Invoice
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

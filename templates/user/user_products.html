@@ -1,0 +1,112 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\user_products.html -->
+{% extends "base.html" %}
+
+{% block title %}Shop Collection - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Filter and Search Header -->
+    <div class="row align-items-center mb-5 g-4">
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-0">Discover Premium Products</h2>
+            <p class="text-muted mb-0" style="font-size: 0.95rem;">Curated luxury items, chosen for high quality and state-of-the-art details.</p>
+        </div>
+        <div class="col-md-6">
+            <!-- Modern Filter Form -->
+            <form method="GET" action="{{ url_for('user_products') }}" class="row g-2 justify-content-md-end">
+                <div class="col-sm-5">
+                    <input type="text" name="search" class="form-control rounded-3 py-2.5 border-1 shadow-sm" placeholder="Search product..." value="{{ request.args.get('search', '') }}" style="font-size: 0.9rem;">
+                </div>
+                <div class="col-sm-4">
+                    <select name="category" class="form-select rounded-3 py-2.5 border-1 shadow-sm" style="font-size: 0.9rem;">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.category }}" {% if request.args.get('category') == cat.category %}selected{% endif %}>
+                            {{ cat.category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-premium-primary w-100 py-2.5 shadow-sm"><i class="bi bi-filter"></i> Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    {% if products %}
+        <div class="row g-4">
+            {% for product in products %}
+                <!-- Calculated Mock original price for luxury visual feel -->
+                {% set original_price = (product.price | float * 1.25) | round %}
+                
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="premium-product-card">
+                        <!-- Discount Badge -->
+                        <span class="card-badge bg-danger">20% OFF</span>
+                        
+                        <!-- Wishlist button (visual interaction) -->
+                        <button class="wishlist-overlay-btn" type="button" aria-label="Add to Wishlist">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                        
+                        <!-- Product Image -->
+                        <div class="card-img-wrapper">
+                            <a href="{{ url_for('user_product_details', product_id=product.product_id) }}">
+                                <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}" alt="{{ product.name }}">
+                            </a>
+                        </div>
+                        
+                        <!-- Card Body -->
+                        <div class="card-body-premium">
+                            <div class="card-category">{{ product.category }}</div>
+                            <h5 class="card-title-premium">
+                                <a href="{{ url_for('user_product_details', product_id=product.product_id) }}">{{ product.name }}</a>
+                            </h5>
+                            
+                            <!-- Rating -->
+                            <div class="rating-stars">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                                <span class="text-muted ms-1" style="font-size: 0.75rem;">(48)</span>
+                            </div>
+                            
+                            <!-- Prices -->
+                            <div class="price-wrapper">
+                                <span class="current-price">₹{{ product.price }}</span>
+                                <span class="original-price">₹{{ original_price }}</span>
+                            </div>
+                            
+                            <!-- Actions Layout -->
+                            <div class="d-flex gap-2 mt-auto">
+                                <a class="btn btn-premium-outline py-2 w-50" href="{{ url_for('user_product_details', product_id=product.product_id) }}" style="font-size: 0.85rem; padding: 8px 12px;">
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
+                                <form class="cart-form w-50" action="{{ url_for('add_to_cart', product_id=product.product_id) }}" method="POST">
+                                    <button class="btn btn-premium-accent py-2 w-100" type="submit" style="font-size: 0.85rem; padding: 8px 12px;">
+                                        <i class="bi bi-cart-plus"></i> Add
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty catalog state -->
+        <div class="text-center py-5">
+            <div class="rounded-circle bg-secondary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                <i class="bi bi-search text-muted" style="font-size: 2.2rem;"></i>
+            </div>
+            <h4 class="fw-bold">No Products Found</h4>
+            <p class="text-muted">We couldn't find any products matching your search criteria. Try another term or filter.</p>
+            <a href="{{ url_for('user_products') }}" class="btn btn-premium-primary py-2 px-4 mt-2">Clear Filters</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

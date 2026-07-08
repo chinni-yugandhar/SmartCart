@@ -1,0 +1,335 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\index.html -->
+{% extends "base.html" %}
+
+{% block title %}SmartCart - Premium Online Store{% endblock %}
+
+{% block content %}
+<!-- Premium Hero Carousel -->
+<div id="heroCarousel" class="carousel slide carousel-fade mb-5" data-bs-ride="carousel" style="margin-top: -12px;">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner" style="height: 60vh; min-height: 450px;">
+        <!-- Slide 1 -->
+        <div class="carousel-item active" style="height: 100%; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+            <div class="container h-100 d-flex align-items-center">
+                <div class="row align-items-center w-100">
+                    <div class="col-lg-6 text-white" data-aos="fade-right">
+                        <span class="badge bg-warning text-dark mb-3 px-3 py-2 text-uppercase fw-bold" style="letter-spacing: 1px;">Exclusive Season Sale</span>
+                        <h1 class="display-4 fw-bold mb-3">Redefining Modern Elegance</h1>
+                        <p class="lead mb-4 text-white-50">Explore our curated collection of premium accessories and apparel designed to complement your lifestyle.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ url_for('user_products') }}" class="btn btn-premium-accent py-3 px-4">Explore Collection</a>
+                            <a href="{{ url_for('user_products') }}?category=Fashion" class="btn btn-outline-light py-3 px-4 rounded-3 fw-semibold">View Fashion</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block text-center position-relative">
+                        <i class="bi bi-bag-heart text-warning opacity-10 position-absolute" style="font-size: 16rem; top: -140px; right: 80px;"></i>
+                        <i class="bi bi-gem text-white-50" style="font-size: 10rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item" style="height: 100%; background: linear-gradient(135deg, #020617 0%, #0f172a 100%);">
+            <div class="container h-100 d-flex align-items-center">
+                <div class="row align-items-center w-100">
+                    <div class="col-lg-6 text-white">
+                        <span class="badge bg-danger mb-3 px-3 py-2 text-uppercase fw-bold" style="letter-spacing: 1px;">Hot Tech Arrivals</span>
+                        <h1 class="display-4 fw-bold mb-3">Next-Gen Audio Experience</h1>
+                        <p class="lead mb-4 text-white-50">Immerse yourself in pure studio quality sound with our latest range of wireless earbuds and headphones.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ url_for('user_products') }}?category=Electronics" class="btn btn-premium-accent py-3 px-4">Shop Audio</a>
+                            <a href="{{ url_for('user_products') }}" class="btn btn-outline-light py-3 px-4 rounded-3 fw-semibold">Discover More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block text-center position-relative">
+                        <i class="bi bi-earbuds text-white-50" style="font-size: 10rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="carousel-item" style="height: 100%; background: linear-gradient(135deg, #111827 0%, #1f2937 100%);">
+            <div class="container h-100 d-flex align-items-center">
+                <div class="row align-items-center w-100">
+                    <div class="col-lg-6 text-white">
+                        <span class="badge bg-success mb-3 px-3 py-2 text-uppercase fw-bold" style="letter-spacing: 1px;">Limited Time Offer</span>
+                        <h1 class="display-4 fw-bold mb-3">Upgrade Your Workstation</h1>
+                        <p class="lead mb-4 text-white-50">Elevate productivity and comfort with state-of-the-art keyboards, laptops, and ergonomic desk gear.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ url_for('user_products') }}?category=Electronics" class="btn btn-premium-accent py-3 px-4">Browse Gadgets</a>
+                            <a href="{{ url_for('user_products') }}" class="btn btn-outline-light py-3 px-4 rounded-3 fw-semibold">View All</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block text-center position-relative">
+                        <i class="bi bi-laptop text-white-50" style="font-size: 10rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container my-5">
+    <!-- Featured Categories Section -->
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold text-warning" style="font-size: 0.85rem; letter-spacing: 1.5px;">Curated Collections</span>
+        <h2 class="fw-bold mt-2">Explore Featured Categories</h2>
+        <div class="d-flex justify-content-center mt-2"><div style="width: 50px; height: 3px; background-color: var(--accent);"></div></div>
+    </div>
+    
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-lg-3 col-md-6">
+            <a href="{{ url_for('user_products') }}?category=Electronics" class="card text-center p-4 h-100 border-0 shadow-sm card-hover-lift rounded-4 bg-white">
+                <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-laptop text-warning" style="font-size: 2rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Electronics</h5>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Laptops, Phones & Accessories</p>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a href="{{ url_for('user_products') }}?category=Fashion" class="card text-center p-4 h-100 border-0 shadow-sm card-hover-lift rounded-4 bg-white">
+                <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-tag text-danger" style="font-size: 2rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Fashion</h5>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Luxury Clothing & Outfits</p>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a href="{{ url_for('user_products') }}?category=Gadgets" class="card text-center p-4 h-100 border-0 shadow-sm card-hover-lift rounded-4 bg-white">
+                <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-earbuds text-primary" style="font-size: 2rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Gadgets</h5>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Audio Gear & Smart Devices</p>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <a href="{{ url_for('user_products') }}" class="card text-center p-4 h-100 border-0 shadow-sm card-hover-lift rounded-4 bg-white">
+                <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+                    <i class="bi bi-collection text-success" style="font-size: 2rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-2">View All</h5>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Browse entire product listings</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="my-5 py-4 bg-white rounded-4 border p-4 p-md-5 shadow-sm">
+        <div class="row g-4 text-center">
+            <div class="col-md-3 col-6 border-end-md">
+                <div class="text-warning mb-3"><i class="bi bi-truck" style="font-size: 2.2rem;"></i></div>
+                <h6 class="fw-bold mb-1">Free Express Delivery</h6>
+                <p class="text-muted mb-0" style="font-size: 0.8rem;">On all orders over ₹499</p>
+            </div>
+            <div class="col-md-3 col-6 border-end-md">
+                <div class="text-warning mb-3"><i class="bi bi-shield-check" style="font-size: 2.2rem;"></i></div>
+                <h6 class="fw-bold mb-1">Secure Payments</h6>
+                <p class="text-muted mb-0" style="font-size: 0.8rem;">Integrated Razorpay gateway</p>
+            </div>
+            <div class="col-md-3 col-6 border-end-md">
+                <div class="text-warning mb-3"><i class="bi bi-arrow-counterclockwise" style="font-size: 2.2rem;"></i></div>
+                <h6 class="fw-bold mb-1">30-Day Easy Returns</h6>
+                <p class="text-muted mb-0" style="font-size: 0.8rem;">No questions asked returns</p>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="text-warning mb-3"><i class="bi bi-headset" style="font-size: 2.2rem;"></i></div>
+                <h6 class="fw-bold mb-1">24/7 Dedicated Support</h6>
+                <p class="text-muted mb-0" style="font-size: 0.8rem;">Fast and friendly assistance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trending Showcase Section (Realistically Mocked Premium Cards) -->
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold text-warning" style="font-size: 0.85rem; letter-spacing: 1.5px;">Trending Products</span>
+        <h2 class="fw-bold mt-2">Best Sellers of the Week</h2>
+        <div class="d-flex justify-content-center mt-2"><div style="width: 50px; height: 3px; background-color: var(--accent);"></div></div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Mock Card 1 -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="premium-product-card">
+                <div class="card-badge bg-danger">Sale</div>
+                <div class="card-img-wrapper">
+                    <img src="https://img.icons8.com/isometric/512/macbook.png" alt="MacBook Pro">
+                </div>
+                <div class="card-body-premium">
+                    <div class="card-category">Electronics</div>
+                    <h5 class="card-title-premium"><a href="/user/products">Apple MacBook Pro - Supercharged Core</a></h5>
+                    <div class="rating-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(124)</span>
+                    </div>
+                    <div class="price-wrapper">
+                        <span class="current-price">₹1,24,900</span>
+                        <span class="original-price">₹1,39,900</span>
+                    </div>
+                    <a href="/user/products" class="btn btn-premium-primary w-100 py-2.5 mt-auto">Browse Store</a>
+                </div>
+            </div>
+        </div>
+        <!-- Mock Card 2 -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="premium-product-card">
+                <div class="card-badge">New</div>
+                <div class="card-img-wrapper">
+                    <img src="https://img.icons8.com/isometric/512/headphones.png" alt="Beats Studio">
+                </div>
+                <div class="card-body-premium">
+                    <div class="card-category">Gadgets</div>
+                    <h5 class="card-title-premium"><a href="/user/products">Smart Beats Studio Audio Pro</a></h5>
+                    <div class="rating-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(88)</span>
+                    </div>
+                    <div class="price-wrapper">
+                        <span class="current-price">₹14,999</span>
+                        <span class="original-price">₹18,999</span>
+                    </div>
+                    <a href="/user/products" class="btn btn-premium-primary w-100 py-2.5 mt-auto">Browse Store</a>
+                </div>
+            </div>
+        </div>
+        <!-- Mock Card 3 -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="premium-product-card">
+                <div class="card-badge bg-warning text-dark">Popular</div>
+                <div class="card-img-wrapper">
+                    <img src="https://img.icons8.com/isometric/512/iphone.png" alt="Samsung Galaxy S26">
+                </div>
+                <div class="card-body-premium">
+                    <div class="card-category">Electronics</div>
+                    <h5 class="card-title-premium"><a href="/user/products">Samsung Galaxy S26 Ultra Matte</a></h5>
+                    <div class="rating-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(312)</span>
+                    </div>
+                    <div class="price-wrapper">
+                        <span class="current-price">₹95,999</span>
+                        <span class="original-price">₹1,09,999</span>
+                    </div>
+                    <a href="/user/products" class="btn btn-premium-primary w-100 py-2.5 mt-auto">Browse Store</a>
+                </div>
+            </div>
+        </div>
+        <!-- Mock Card 4 -->
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="premium-product-card">
+                <div class="card-badge bg-danger">Sale</div>
+                <div class="card-img-wrapper">
+                    <img src="https://img.icons8.com/isometric/512/t-shirt.png" alt="Summer Casual Knit">
+                </div>
+                <div class="card-body-premium">
+                    <div class="card-category">Fashion</div>
+                    <h5 class="card-title-premium"><a href="/user/products">Men's Summer Solid Color Casual Knit</a></h5>
+                    <div class="rating-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                        <i class="bi bi-star"></i>
+                        <span class="text-muted ms-1" style="font-size: 0.75rem;">(45)</span>
+                    </div>
+                    <div class="price-wrapper">
+                        <span class="current-price">₹1,499</span>
+                        <span class="original-price">₹2,999</span>
+                    </div>
+                    <a href="/user/products" class="btn btn-premium-primary w-100 py-2.5 mt-auto">Browse Store</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Testimonials Section -->
+    <div class="text-center my-5 pt-4">
+        <span class="text-uppercase fw-bold text-warning" style="font-size: 0.85rem; letter-spacing: 1.5px;">Testimonials</span>
+        <h2 class="fw-bold mt-2">What Our Customers Say</h2>
+        <div class="d-flex justify-content-center mt-2"><div style="width: 50px; height: 3px; background-color: var(--accent);"></div></div>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card p-4 border shadow-sm rounded-4 h-100 bg-white">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                    "SmartCart has redefined my online shopping experience. The premium design, fast payments, and quick shipping make it my primary destination for electronics."
+                </p>
+                <hr class="bg-secondary opacity-25">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-semibold" style="width: 40px; height: 40px;">R</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Rahul Sharma</h6>
+                        <span class="text-muted" style="font-size: 0.75rem;">Verified Purchase</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border shadow-sm rounded-4 h-100 bg-white">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                </div>
+                <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                    "Extremely pleased with the quality of clothing collections here. Fast checkout using UPI via Razorpay, and the customer support is extremely polite and efficient."
+                </p>
+                <hr class="bg-secondary opacity-25">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-semibold" style="width: 40px; height: 40px;">P</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Priya Patel</h6>
+                        <span class="text-muted" style="font-size: 0.75rem;">Verified Purchase</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4 border shadow-sm rounded-4 h-100 bg-white">
+                <div class="text-warning mb-2">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                </div>
+                <p class="text-muted" style="font-size: 0.9rem; line-height: 1.6;">
+                    "Amazing UI! I can track my orders dynamically and view all invoices in high-definition PDF downloads instantly. Highly recommended international standard e-store."
+                </p>
+                <hr class="bg-secondary opacity-25">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center fw-semibold" style="width: 40px; height: 40px;">A</div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">Amit Verma</h6>
+                        <span class="text-muted" style="font-size: 0.75rem;">Verified Purchase</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

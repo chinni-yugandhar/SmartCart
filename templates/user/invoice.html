@@ -1,0 +1,214 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\invoice.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Invoice - SmartCart</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        body { 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            color: #1e293b;
+            background-color: #ffffff;
+            font-size: 10pt;
+            line-height: 1.5;
+        }
+        .invoice-box {
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Layout Tables for Safe Alignment in xhtml2pdf */
+        .layout-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: none;
+            margin-bottom: 20px;
+        }
+        .layout-table td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+        
+        .header-title { 
+            font-size: 24pt; 
+            font-weight: bold; 
+            color: #0f172a; 
+            margin: 0 0 5px 0; 
+        }
+        .header-subtitle { 
+            font-size: 14pt; 
+            font-weight: bold; 
+            color: #d4af37; 
+            margin: 0 0 10px 0; 
+            letter-spacing: 1px;
+        }
+        .header-meta {
+            font-size: 9pt;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 10pt;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .address-box {
+            font-size: 9.5pt;
+            color: #334155;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* Items Table */
+        .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+        .items-table th { 
+            background-color: #0f172a; 
+            color: #ffffff; 
+            padding: 8px 10px; 
+            font-size: 9pt;
+            font-weight: bold;
+            text-align: left;
+            border: 1px solid #0f172a;
+        }
+        .items-table td { 
+            border: 1px solid #e2e8f0; 
+            padding: 10px; 
+            font-size: 9.5pt;
+            color: #334155;
+        }
+        .items-table tr.even-row td { 
+            background-color: #f8fafc; 
+        }
+        
+        .total-section {
+            text-align: right;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        .grand-total-label {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #64748b;
+            display: inline-block;
+        }
+        .grand-total-val {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #0f172a;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            font-size: 8pt;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+    <!-- Header Block using tables for safe positioning -->
+    <table class="layout-table">
+        <tr>
+            <td style="width: 50%;">
+                <div class="header-title">SmartCart</div>
+                <div class="header-subtitle">PREMIUM STORE</div>
+            </td>
+            <td style="width: 50%; text-align: right;" class="header-meta">
+                <strong>INVOICE RECEIPT</strong><br>
+                <strong>Order ID:</strong> #{{ order.order_id }}<br>
+                <strong>Date:</strong> {{ order.created_at }}<br>
+                <strong>Payment status:</strong> Paid (Razorpay Secure)
+            </td>
+        </tr>
+    </table>
+
+    <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 25px;">
+
+    <!-- Customer & Shipping Blocks Side-by-Side using Layout Table -->
+    <table class="layout-table">
+        <tr>
+            <td style="width: 48%;">
+                <div class="section-title">Customer Profile</div>
+                <div class="address-box">
+                    <strong>Name:</strong> {{ customer_name }}<br>
+                    <strong>Email:</strong> {{ customer_email }}<br>
+                    <strong>Phone:</strong> {{ customer_phone }}
+                </div>
+            </td>
+            <td style="width: 4%;"></td> <!-- Spacer -->
+            <td style="width: 48%;">
+                <div class="section-title">Shipping Address</div>
+                <div class="address-box">
+                    <strong>Address:</strong> {{ address }}<br>
+                    <strong>City & State:</strong> {{ city }}, {{ state }}<br>
+                    <strong>Pincode:</strong> {{ pincode }}
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Order Items -->
+    <div class="section-title">Order Items Details</div>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th style="width: 50%;">Product Details</th>
+                <th style="width: 15%; text-align: center;">Quantity</th>
+                <th style="width: 15%; text-align: right;">Unit Price (₹)</th>
+                <th style="width: 20%; text-align: right;">Total Price (₹)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for it in items %}
+            <tr class="{% if loop.index is even %}even-row{% endif %}">
+                <td style="font-weight: bold; color: #0f172a;">{{ it.product_name }}</td>
+                <td style="text-align: center;">{{ it.quantity }}</td>
+                <td style="text-align: right;">{{ "%.2f" | format(it.price / it.quantity) }}</td>
+                <td style="text-align: right; font-weight: bold; color: #0f172a;">{{ "%.2f" | format(it.price) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total section -->
+    <div class="total-section">
+        <span class="grand-total-label">Grand Total:</span>
+        <span class="grand-total-val">₹{{ "%.2f" | format(order.amount) }}</span>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Thank you for purchasing from SmartCart! This invoice serves as official proof of payment.</p>
+        <p>If you have any questions or require support, please contact us at support@smartcart.com</p>
+    </div>
+</div>
+
+</body>
+</html>

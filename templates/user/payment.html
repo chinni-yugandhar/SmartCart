@@ -1,0 +1,146 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\payment.html -->
+{% extends "base.html" %}
+
+{% block title %}Secure Payment - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Step Progress Indicator -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between position-relative align-items-center">
+                <!-- Progress Line -->
+                <div class="position-absolute top-50 start-0 translate-middle-y w-100 bg-secondary bg-opacity-25" style="height: 3px; z-index: 1;"></div>
+                <div class="position-absolute top-50 start-0 translate-middle-y bg-warning" style="height: 3px; width: 66%; z-index: 2; transition: var(--transition-smooth);"></div>
+                
+                <!-- Steps -->
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-cart-check-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Cart</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <span class="fw-semibold text-warning mt-2" style="font-size: 0.85rem;">Address</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-credit-card-fill"></i>
+                    </div>
+                    <span class="fw-bold mt-2" style="font-size: 0.85rem; color: var(--primary-dark);">Payment</span>
+                </div>
+                <div class="d-flex flex-column align-items-center position-relative" style="z-index: 3;">
+                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px; border: 4px solid var(--bg-primary);">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <span class="fw-semibold text-muted mt-2" style="font-size: 0.85rem;">Confirm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Payment Layout -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-9">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white p-4 p-md-5 text-center">
+                <!-- Header/Icon -->
+                <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 70px; height: 70px;">
+                    <i class="bi bi-shield-fill-check text-warning" style="font-size: 2.2rem;"></i>
+                </div>
+                
+                <h3 class="fw-bold mb-2">Secure Checkout</h3>
+                <p class="text-muted mb-4">Complete your payment securely via the integrated Razorpay payment gateway.</p>
+                
+                <!-- Payment Summary Block -->
+                <div class="bg-light p-4 rounded-3 border mb-4 text-start">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Order ID:</span>
+                        <span class="fw-semibold text-dark">{{ order_id }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Gateway:</span>
+                        <span class="fw-semibold text-dark">Razorpay Secure</span>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-dark fs-5">Amount Payable:</span>
+                        <span class="fs-3 fw-bold text-success">₹{{ amount }}</span>
+                    </div>
+                </div>
+
+                <!-- Safe transaction badges -->
+                <div class="d-flex justify-content-center align-items-center gap-3 mb-4 text-muted" style="font-size: 0.8rem;">
+                    <span><i class="bi bi-lock-fill text-success"></i> 256-bit SSL Encryption</span>
+                    <span>&bull;</span>
+                    <span><i class="bi bi-patch-check-fill text-primary"></i> PCI-DSS Compliant</span>
+                </div>
+
+                <!-- Primary CTA Button -->
+                <button id="rzp-button" class="btn btn-premium-accent w-100 py-3 text-uppercase fw-bold fs-6 shadow-md mb-3">
+                    <i class="bi bi-wallet2 me-2"></i> Pay Securely Now
+                </button>
+                
+                <a href="{{ url_for('view_cart') }}" class="text-muted d-inline-block mt-2" style="font-size: 0.9rem;">
+                    Cancel and Return to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ key_id }}",
+    "amount": "{{ amount * 100 }}",
+    "currency": "INR",
+    "name": "SmartCart",
+    "description": "Order Payment",
+    "order_id": "{{ order_id }}",
+    "handler": function (response){
+        // Build a small form and POST to server for verification
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/verify-payment";
+
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
+        };
+
+        for (var name in fields) {
+            var input = document.createElement("input");
+            input.type = "hidden";
+            input.name = name;
+            input.value = fields[name];
+            form.appendChild(input);
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+    "prefill": {
+        "name": "{{ customer_name }}",
+        "email": "{{ customer_email }}",
+        "contact": "{{ customer_contact }}"
+    },
+    "theme": {
+        "color": "#0f172a"
+    }
+};
+
+var rzp = new Razorpay(options);
+document.getElementById('rzp-button').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+{% endblock %}

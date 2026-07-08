@@ -1,0 +1,109 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\edit_profile.html -->
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
+                <div class="mb-4">
+                    <h3 class="fw-bold"><i class="bi bi-pencil-square text-warning me-2"></i>Edit My Profile</h3>
+                    <p class="text-muted">Update your details to ensure smooth deliveries and secure notifications.</p>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <!-- Name -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Full Name" value="{{ user.name }}" required>
+                                <label for="name"><i class="bi bi-person me-2"></i>Full Name</label>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" value="{{ user.phone or '' }}">
+                                <label for="phone"><i class="bi bi-phone me-2"></i>Phone Number</label>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-md-12">
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" id="address" name="address" placeholder="Street Address" style="height: 100px;">{{ user.address or '' }}</textarea>
+                                <label for="address"><i class="bi bi-geo-alt me-2"></i>Street Address</label>
+                            </div>
+                        </div>
+
+                        <!-- City -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="City" value="{{ user.city or '' }}">
+                                <label for="city"><i class="bi bi-building me-2"></i>City</label>
+                            </div>
+                        </div>
+
+                        <!-- State -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="state" name="state" placeholder="State" value="{{ user.state or '' }}">
+                                <label for="state"><i class="bi bi-map me-2"></i>State</label>
+                            </div>
+                        </div>
+
+                        <!-- Pincode -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode" value="{{ user.pincode or '' }}">
+                                <label for="pincode"><i class="bi bi-hash me-2"></i>Pincode</label>
+                            </div>
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <label for="profile_image" class="form-label fw-semibold text-dark"><i class="bi bi-image me-1"></i> Update Profile Image</label>
+                                <input class="form-control" type="file" id="profile_image" name="profile_image" accept="image/*">
+                                <small class="text-muted d-block mt-1">Upload a high-quality square image (JPEG/PNG).</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-2 border-top pt-4">
+                        <a href="{{ url_for('user_profile') }}" class="btn btn-premium-outline px-4 py-3 align-self-stretch text-center w-50">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-premium-accent py-3 w-50">
+                            Save Changes <i class="bi bi-check-circle"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Bootstrap form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

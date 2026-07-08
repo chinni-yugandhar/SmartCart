@@ -1,0 +1,84 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\profile.html -->
+{% extends "base.html" %}
+
+{% block title %}My Profile - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+                <!-- Cover Banner -->
+                <div class="bg-primary py-5 position-relative" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;">
+                    <div style="height: 60px;"></div>
+                </div>
+                
+                <div class="px-4 px-md-5 pb-5 position-relative">
+                    <!-- Avatar Image Overlay -->
+                    <div class="position-absolute translate-middle-y text-center" style="top: 0; left: 50px; z-index: 10;">
+                        {% if user.profile_image %}
+                            <img src="{{ url_for('static', filename='uploads/profile_images/' + user.profile_image) }}" alt="Profile Image" class="rounded-circle border border-4 border-white shadow-md" style="width: 120px; height: 120px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-warning border border-4 border-white shadow-md d-flex align-items-center justify-content-center text-dark fw-bold fs-1" style="width: 120px; height: 120px;">
+                                {{ user.name[0] | upper if user.name else 'U' }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Header Content -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 pt-5 mt-3 mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-1">{{ user.name }}</h2>
+                            <p class="text-muted mb-0"><i class="bi bi-envelope me-1"></i>{{ user.email }}</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('edit_user_profile') }}" class="btn btn-premium-accent py-2 px-4">
+                                <i class="bi bi-pencil-square"></i> Edit Profile
+                            </a>
+                            <a href="{{ url_for('user_dashboard') }}" class="btn btn-premium-outline py-2 px-4">
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Details Section -->
+                    <h5 class="fw-bold mb-3 border-bottom pb-2"><i class="bi bi-person-lines-fill text-warning me-1"></i> Contact & Shipping Details</h5>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</span>
+                                <span class="fw-semibold text-dark fs-6">{{ user.phone or 'Not Added' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">City</span>
+                                <span class="fw-semibold text-dark fs-6">{{ user.city or 'Not Added' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Street Address</span>
+                                <span class="fw-semibold text-dark fs-6">{{ user.address or 'Not Added' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">State</span>
+                                <span class="fw-semibold text-dark fs-6">{{ user.state or 'Not Added' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded-3 border">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pincode</span>
+                                <span class="fw-semibold text-dark fs-6">{{ user.pincode or 'Not Added' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

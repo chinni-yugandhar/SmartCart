@@ -1,0 +1,129 @@
+<!-- C:\codegnan\Flask\Smart cart version 1\Smart-cart-version-1-main\templates\user\product_details.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Details - SmartCart{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/" class="text-warning">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('user_products') }}" class="text-warning">Shop</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('user_products') }}?category={{ product.category }}" class="text-warning">{{ product.category }}</a></li>
+            <li class="breadcrumb-item active text-muted" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Product Details Card -->
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white mb-5">
+        <div class="row g-0">
+            <!-- Left Side: Product Image Display with Zoom -->
+            <div class="col-lg-6 bg-light d-flex align-items-center justify-content-center p-4 p-md-5" style="border-right: 1px solid var(--border-color);">
+                <div class="position-relative w-100 text-center overflow-hidden rounded-3" style="max-height: 480px;">
+                    <span class="card-badge bg-danger position-absolute top-0 start-0 m-3">Best Seller</span>
+                    <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}" alt="{{ product.name }}" class="img-fluid rounded-3" style="max-height: 400px; object-fit: contain; transition: transform 0.5s ease-out;" id="productMainImage">
+                </div>
+            </div>
+
+            <!-- Right Side: Details & Actions -->
+            <div class="col-lg-6 p-4 p-md-5 d-flex flex-column justify-content-between">
+                <div>
+                    <!-- Category Badge -->
+                    <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 text-uppercase fw-bold mb-3" style="letter-spacing: 1px; font-size: 0.8rem;">
+                        {{ product.category }}
+                    </span>
+                    
+                    <!-- Title -->
+                    <h1 class="display-6 fw-bold mb-3" style="color: var(--primary-dark);">{{ product.name }}</h1>
+                    
+                    <!-- Rating and Reviews -->
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <div class="text-warning" style="font-size: 1rem;">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-half"></i>
+                        </div>
+                        <span class="text-muted" style="font-size: 0.85rem;">4.7 Star Rating | 48 Customer Reviews</span>
+                    </div>
+                    
+                    <!-- Prices wrapper -->
+                    {% set original_price = (product.price | float * 1.25) | round %}
+                    <div class="price-wrapper align-items-baseline gap-3 mb-4">
+                        <span class="display-5 fw-bold text-dark">₹{{ product.price }}</span>
+                        <span class="text-decoration-line-through text-muted" style="font-size: 1.2rem;">₹{{ original_price }}</span>
+                        <span class="badge bg-success py-2 px-3 text-uppercase fw-bold" style="font-size: 0.8rem;">Save 20%</span>
+                    </div>
+
+                    <!-- Short Description -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-2">Description:</h6>
+                        <p class="text-muted" style="line-height: 1.7;">{{ product.description }}</p>
+                    </div>
+                </div>
+
+                <!-- Product Specifications Accordion -->
+                <div class="accordion accordion-flush mb-4" id="detailsAccordion">
+                    <div class="accordion-item border-bottom">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button collapsed px-0 fw-semibold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                <i class="bi bi-truck me-2 text-warning"></i> Shipping & Delivery
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#detailsAccordion">
+                            <div class="accordion-body px-0 text-muted" style="font-size: 0.85rem; line-height: 1.6;">
+                                Free standard delivery on orders above ₹499. Orders are processed within 24 hours and delivered within 3-5 business days. Express shipping options available at checkout.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item border-bottom">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed px-0 fw-semibold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="bi bi-shield-check me-2 text-warning"></i> Return & Warranty
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#detailsAccordion">
+                            <div class="accordion-body px-0 text-muted" style="font-size: 0.85rem; line-height: 1.6;">
+                                We offer a 30-day hassle-free return policy. Items must be returned in their original packaging. The product is also backed by a 1-year limited manufacturing warranty.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-column flex-md-row gap-3 pt-3">
+                    <a href="{{ url_for('user_products') }}" class="btn btn-premium-outline px-4 py-3 align-self-stretch text-center">
+                        <i class="bi bi-arrow-left"></i> Back to Shop
+                    </a>
+                    
+                    <!-- Form for Add to Cart -->
+                    <form action="{{ url_for('add_to_cart', product_id=product.product_id) }}" method="POST" class="flex-grow-1">
+                        <button type="submit" class="btn btn-premium-accent w-100 py-3">
+                            <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </form>
+                    
+                    <a href="{{ url_for('buy_now', product_id=product.product_id) }}" class="btn btn-premium-primary px-4 py-3 flex-grow-1 text-center">
+                        <i class="bi bi-lightning-charge me-1"></i> Buy Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_extra %}
+<script>
+    // Subtle hover zoom effect on main image
+    const mainImg = document.getElementById('productMainImage');
+    mainImg.addEventListener('mouseover', function() {
+        this.style.transform = 'scale(1.05)';
+    });
+    mainImg.addEventListener('mouseout', function() {
+        this.style.transform = 'scale(1)';
+    });
+</script>
+{% endblock %}
