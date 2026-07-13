@@ -85,15 +85,19 @@ def admin_signup():
 
     # 4️ Send OTP Email
     message = Message(
-        subject="SmartCart Admin OTP",
-        sender=config.MAIL_USERNAME,
-        recipients=[email]
-    )
+    subject="SmartCart Admin OTP",
+    sender=config.MAIL_SENDER,
+    recipients=[email]
+)
     message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
-    mail.send(message)
-
-    flash("OTP sent to your email!", "success")
-    return redirect('/verify-otp')
+    try:
+        mail.send(message)
+        print("Email sent successfully")
+    except Exception as e:
+        print("EMAIL ERROR:", str(e))
+        flash(f"Email Error: {str(e)}", "danger")
+        return redirect('/admin-signup')
+    
 
 
 
