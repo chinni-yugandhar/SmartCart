@@ -14,6 +14,9 @@ DB_PASSWORD = os.environ.get("DB_PASSWORD")
 DB_NAME = os.environ.get("DB_NAME")
 DB_PORT = int(os.environ.get("DB_PORT", 32226))
 
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY")
+MAIL_SENDER = os.environ.get("MAIL_SENDER")
+
 # Email SMTP Settings (Brevo)
 
 MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp-relay.brevo.com")
@@ -26,3 +29,4 @@ MAIL_SENDER = os.environ.get("MAIL_SENDER")      # Verified sender email
 # Razorpay
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+

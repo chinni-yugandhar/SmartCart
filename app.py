@@ -12,6 +12,7 @@ import os
 import razorpay
 import socket
 socket.setdefaulttimeout(30)
+import requests
 
 razorpay_client = razorpay.Client(
     auth=(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET)
@@ -19,6 +20,36 @@ razorpay_client = razorpay.Client(
 
 
 app = Flask(__name__)
+def send_email(to_email, subject, body):
+
+    url = "https://api.brevo.com/v3/smtp/email"
+
+    headers = {
+        "accept": "application/json",
+        "api-key": config.BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+
+    payload = {
+        "sender": {
+            "email": config.MAIL_SENDER,
+            "name": "SmartCart"
+        },
+        "to": [
+            {"email": to_email}
+        ],
+        "subject": subject,
+        "htmlContent": f"<p>{body}</p>"
+    }
+
+    response = requests.post(
+        url,
+        json=payload,
+        headers=headers,
+        timeout=30
+    )
+
+    return response.status_code, response.text
 app.secret_key = config.SECRET_KEY
 
 # ---------------- EMAIL CONFIGURATION ----------------
@@ -79,16 +110,13 @@ def smtp_test():
 @app.route('/admin-signup', methods=['GET', 'POST'])
 def admin_signup():
 
-    # Show form
     if request.method == "GET":
         return render_template("admin/admin_signup.html")
 
     try:
-        # POST → Process signup
         name = request.form['name']
         email = request.form['email']
 
-        # Check if admin email already exists
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
@@ -109,38 +137,32 @@ def admin_signup():
             )
             return redirect('/admin-signup')
 
-        # Save data in session
         session['signup_name'] = name
         session['signup_email'] = email
 
-        # Generate OTP
         otp = random.randint(100000, 999999)
         session['otp'] = otp
 
-        # Send OTP Email
-        message = Message(
-            subject="SmartCart Admin OTP",
-            sender=config.MAIL_SENDER,
-            recipients=[email]
-        )
-
-        message.body = (
+        status, result = send_email(
+            email,
+            "SmartCart Admin OTP",
             f"Your OTP for SmartCart Admin Registration is: {otp}"
         )
 
-        print("Before sending email...")
-        mail.send(message)
-        print("Email sent successfully")
+        print("Brevo Status:", status)
+        print("Brevo Response:", result)
+
+        if status != 201:
+            flash("Failed to send OTP email", "danger")
+            return redirect('/admin-signup')
 
         flash("OTP sent to your email!", "success")
         return redirect('/verify-otp')
 
     except Exception as e:
-        print("EMAIL ERROR:", repr(e))
+        print("ERROR:", repr(e))
         flash(f"Error: {str(e)}", "danger")
         return redirect('/admin-signup')
-
-
 # ---------------------------------------------------------
 # ROUTE 3: VERIFY OTP + SAVE ADMIN
 # ---------------------------------------------------------
