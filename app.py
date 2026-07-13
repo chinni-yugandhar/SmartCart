@@ -166,40 +166,46 @@ def admin_signup():
 # ---------------------------------------------------------
 # ROUTE 3: VERIFY OTP + SAVE ADMIN
 # ---------------------------------------------------------
-@app.route('/verify-otp', methods=['POST'])
+@app.route('/verify-otp', methods=['GET', 'POST'])
 def verify_otp_post():
-    
-    # User submitted OTP + Password
+
+    if request.method == 'GET':
+        return render_template("admin/verify_otp.html")
+
     user_otp = request.form['otp']
     password = request.form['password']
 
-    # Compare OTP
     if str(session.get('otp')) != str(user_otp):
         flash("Invalid OTP. Try again!", "danger")
         return redirect('/verify-otp')
 
-    # Hash password using bcrypt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(
+        password.encode('utf-8'),
+        bcrypt.gensalt()
+    )
 
-    # Insert admin into database
     conn = get_db_connection()
     cursor = conn.cursor()
+
     cursor.execute(
         "INSERT INTO admin (name, email, password) VALUES (%s, %s, %s)",
-        (session['signup_name'], session['signup_email'], hashed_password)
+        (
+            session['signup_name'],
+            session['signup_email'],
+            hashed_password.decode('utf-8')
+        )
     )
+
     conn.commit()
     cursor.close()
     conn.close()
 
-    # Clear temporary session data
     session.pop('otp', None)
     session.pop('signup_name', None)
     session.pop('signup_email', None)
 
     flash("Admin Registered Successfully!", "success")
-    return redirect('/admin-signup')
-
+    return redirect('/admin-login')
 # =================================================================
 # ROUTE 4: ADMIN LOGIN PAGE (GET + POST)
 # =================================================================
