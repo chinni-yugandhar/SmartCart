@@ -32,11 +32,12 @@ mail = Mail(app)
 # ---------------- DB CONNECTION FUNCTION --------------
 def get_db_connection():
     return mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME
-    )
+    host=config.DB_HOST,
+    port=config.DB_PORT,
+    user=config.DB_USER,
+    password=config.DB_PASSWORD,
+    database=config.DB_NAME
+)
 
 
 
@@ -427,7 +428,9 @@ def update_item(item_id):
     # 3️ If admin uploaded a new image → replace it
     if new_image and new_image.filename != "":
         
-        # Secure filename
+        # Secure 
+        
+        
         from werkzeug.utils import secure_filename
         new_filename = secure_filename(new_image.filename)
 

@@ -1,0 +1,60 @@
+# Environment Variables
+.env
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Flask
+instance/
+.flaskenv
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite3
+
+# IDEs
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Build Files
+build/
+dist/
+*.egg-info/
+
+# Uploads
+uploads/
+static/uploads/
+
+# PDF Invoices (optional)
+invoices/
+generated_pdfs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MySQL Dumps
+*.sql
+
+# Render
+.render/
+
+# Secrets
+secrets.json
+credentials.json
