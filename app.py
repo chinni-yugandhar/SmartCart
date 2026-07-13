@@ -59,55 +59,62 @@ def admin_signup():
     if request.method == "GET":
         return render_template("admin/admin_signup.html")
 
-    # POST → Process signup
-    name = request.form['name']
-    email = request.form['email']
-
-    # 1️ Check if admin email already exists
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT admin_id FROM admin WHERE email=%s", (email,))
-    existing_admin = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if existing_admin:
-        flash("This email is already registered. Please login instead.", "danger")
-        return redirect('/admin-signup')
-
-    # 2️ Save user input temporarily in session
-    session['signup_name'] = name
-    session['signup_email'] = email
-
-    # 3️ Generate OTP and store in session
-    otp = random.randint(100000, 999999)
-    session['otp'] = otp
-
-    # 4️ Send OTP Email
-    message = Message(
-    subject="SmartCart Admin OTP",
-    sender=config.MAIL_SENDER,
-    recipients=[email]
-)
-    message.body = f"Your OTP for SmartCart Admin Registration is: {otp}"
     try:
-        print("Before sending email")
+        # POST → Process signup
+        name = request.form['name']
+        email = request.form['email']
+
+        # Check if admin email already exists
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT admin_id FROM admin WHERE email=%s",
+            (email,)
+        )
+
+        existing_admin = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        if existing_admin:
+            flash(
+                "This email is already registered. Please login instead.",
+                "danger"
+            )
+            return redirect('/admin-signup')
+
+        # Save data in session
+        session['signup_name'] = name
+        session['signup_email'] = email
+
+        # Generate OTP
+        otp = random.randint(100000, 999999)
+        session['otp'] = otp
+
+        # Send OTP Email
+        message = Message(
+            subject="SmartCart Admin OTP",
+            sender=config.MAIL_SENDER,
+            recipients=[email]
+        )
+
+        message.body = (
+            f"Your OTP for SmartCart Admin Registration is: {otp}"
+        )
+
+        print("Before sending email...")
         mail.send(message)
         print("Email sent successfully")
+
+        flash("OTP sent to your email!", "success")
+        return redirect('/verify-otp')
+
     except Exception as e:
         print("EMAIL ERROR:", repr(e))
-        raise
-    
-
-
-
-# ---------------------------------------------------------
-# ROUTE 2: DISPLAY OTP PAGE
-# ---------------------------------------------------------
-@app.route('/verify-otp', methods=['GET'])
-def verify_otp_get():
-    return render_template("admin/verify_otp.html")
-
+        flash(f"Error: {str(e)}", "danger")
+        return redirect('/admin-signup')
 
 
 # ---------------------------------------------------------
