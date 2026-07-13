@@ -10,6 +10,8 @@ import random
 import config
 import os
 import razorpay
+import socket
+socket.setdefaulttimeout(30)
 
 razorpay_client = razorpay.Client(
     auth=(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET)
@@ -25,6 +27,7 @@ app.config['MAIL_PORT'] = config.MAIL_PORT
 app.config['MAIL_USE_TLS'] = config.MAIL_USE_TLS
 app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = config.MAIL_SENDER
 
 mail = Mail(app)
 
@@ -40,6 +43,11 @@ def get_db_connection():
 )
 
 
+app.config['MAIL_MAX_EMAILS'] = None
+app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
+
+
 
 # ---------------------------------------------------------
 # ROUTE 0: HOMEPAGE LANDING
@@ -48,6 +56,22 @@ def get_db_connection():
 def index():
     return render_template("index.html")
 
+
+
+
+@app.route('/smtp-test')
+def smtp_test():
+    import smtplib
+
+    try:
+        server = smtplib.SMTP('smtp-relay.brevo.com', 587, timeout=20)
+        server.starttls()
+        server.login(config.MAIL_USERNAME, config.MAIL_PASSWORD)
+        server.quit()
+        return "SMTP Login Success"
+
+    except Exception as e:
+        return str(e)
 
 # ---------------------------------------------------------
 # ROUTE 1: ADMIN SIGNUP (SEND OTP)
