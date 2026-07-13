@@ -683,41 +683,52 @@ def user_signup():
     if request.method == "GET":
         return render_template("user/user_signup.html")
 
-    # POST → Process signup
-    name = request.form['name']
-    email = request.form['email']
+    try:
+        # POST → Process signup
+        name = request.form['name']
+        email = request.form['email']
 
-    # 1️ Check if user email already exists
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT user_id FROM users WHERE email=%s", (email,))
-    existing_user = cursor.fetchone()
-    cursor.close()
-    conn.close()
+        # Check if user email already exists
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT user_id FROM users WHERE email=%s", (email,))
+        existing_user = cursor.fetchone()
+        cursor.close()
+        conn.close()
 
-    if existing_user:
-        flash("This email is already registered. Please login instead.", "danger")
-        return redirect('/user-login')
+        if existing_user:
+            flash("This email is already registered. Please login instead.", "danger")
+            return redirect('/user-login')
 
-    # 2️ Save user input temporarily in session
-    session['user_signup_name'] = name
-    session['user_signup_email'] = email
+        # Save user data in session
+        session['user_signup_name'] = name
+        session['user_signup_email'] = email
 
-    # 3️ Generate OTP and store in session
-    otp = random.randint(100000, 999999)
-    session['user_otp'] = otp
+        # Generate OTP
+        otp = random.randint(100000, 999999)
+        session['user_otp'] = otp
 
-    # 4️ Send OTP Email
-    message = Message(
-        subject="SmartCart User OTP",
-        sender=config.MAIL_USERNAME,
-        recipients=[email]
-    )
-    message.body = f"Your OTP for SmartCart User Registration is: {otp}"
-    mail.send(message)
+        # Send OTP using Brevo API
+        status, result = send_email(
+            email,
+            "SmartCart User OTP",
+            f"Your OTP for SmartCart User Registration is: {otp}"
+        )
 
-    flash("OTP sent to your email!", "success")
-    return redirect('/user-verify-otp')
+        print("Brevo Status:", status)
+        print("Brevo Response:", result)
+
+        if status != 201:
+            flash("Failed to send OTP email!", "danger")
+            return redirect('/user-signup')
+
+        flash("OTP sent to your email!", "success")
+        return redirect('/user-verify-otp')
+
+    except Exception as e:
+        print("ERROR:", repr(e))
+        flash(f"Error: {str(e)}", "danger")
+        return redirect('/user-signup')
 
 # ---------------------------------------------------------
 # ROUTE 17: DISPLAY USER OTP PAGE
@@ -732,36 +743,40 @@ def user_verify_otp_get():
 @app.route('/user-verify-otp', methods=['POST'])
 def user_verify_otp_post():
 
-    # User submitted OTP + Password
     user_otp = request.form['otp']
     password = request.form['password']
 
-    # Compare OTP
     if str(session.get('user_otp')) != str(user_otp):
         flash("Invalid OTP. Try again!", "danger")
         return redirect('/user-verify-otp')
 
-    # Hash password using bcrypt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(
+        password.encode('utf-8'),
+        bcrypt.gensalt()
+    ).decode('utf-8')
 
-    # Insert user into database
     conn = get_db_connection()
     cursor = conn.cursor()
+
     cursor.execute(
         "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-        (session['user_signup_name'], session['user_signup_email'], hashed_password)
+        (
+            session['user_signup_name'],
+            session['user_signup_email'],
+            hashed_password
+        )
     )
+
     conn.commit()
     cursor.close()
     conn.close()
 
-    # Clear temporary session data
     session.pop('user_otp', None)
     session.pop('user_signup_name', None)
     session.pop('user_signup_email', None)
 
     flash("User Registered Successfully!", "success")
-    return redirect('/user-signup')
+    return redirect('/user-login')
 
 # =================================================================
 # ROUTE 19: USER LOGIN PAGE (GET + POST)
@@ -832,13 +847,18 @@ def user_forgot_password():
     session['reset_email'] = email
     session['reset_otp'] = otp
 
-    message = Message(
-        subject="SmartCart Password Reset OTP",
-        sender=config.MAIL_USERNAME,
-        recipients=[email]
+    status, result = send_email(
+        email,
+        "SmartCart Password Reset OTP",
+        f"Your OTP for password reset is: {otp}"
     )
-    message.body = f"Your OTP for password reset is: {otp}"
-    mail.send(message)
+
+    print("Brevo Status:", status)
+    print("Brevo Response:", result)
+
+    if status != 201:
+        flash("Failed to send OTP email!", "danger")
+        return redirect('/user-forgot-password')
 
     flash("OTP sent to your email!", "success")
     return redirect('/user-reset-password')
